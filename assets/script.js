@@ -70,3 +70,34 @@ if (form) {
     window.open(url, '_blank');
   });
 }
+
+/* ===== IMAGE SLIDER ===== */
+(function(){
+  const track = document.getElementById('sliderTrack');
+  const prev  = document.getElementById('sliderPrev');
+  const next  = document.getElementById('sliderNext');
+  const dotsWrap = document.getElementById('sliderDots');
+  if(!track) return;
+
+  const slides = track.children.length;
+  let index = 0, timer;
+
+  for(let i=0;i<slides;i++){
+    const d = document.createElement('button');
+    d.addEventListener('click', ()=>go(i));
+    dotsWrap.appendChild(d);
+  }
+  const dots = dotsWrap.children;
+
+  function update(){
+    track.style.transform = `translateX(-${index*100}%)`;
+    for(let i=0;i<dots.length;i++) dots[i].classList.toggle('is-active', i===index);
+  }
+  function go(i){ index=(i+slides)%slides; update(); reset(); }
+  function reset(){ clearInterval(timer); timer=setInterval(()=>go(index+1),4500); }
+
+  prev.addEventListener('click', ()=>go(index-1));
+  next.addEventListener('click', ()=>go(index+1));
+
+  update(); reset();
+})();
